@@ -34,15 +34,15 @@ module Sysdig
       end
 
       def update_notofication_resolution
-
+        #TODO: Implement this
       end
 
       def create_alert
-
+        #TODO: Implement this
       end
 
       def delete_alert(alert)
-
+        #TODO: Implement this
       end
 
       def get_notification_settings(settings)
@@ -50,11 +50,11 @@ module Sysdig
       end
 
       def set_notification_settings(settings)
-
+        #TODO: Implement this
       end
 
       def add_email_notification_recipient(email)
-
+        #TODO: Implement this
       end
 
       def get_explore_grouping_hierarchy
@@ -66,7 +66,7 @@ module Sysdig
       end
 
       def get_topology_map
-
+        #TODO: Implement this
       end
 
       def get_views_list
@@ -74,7 +74,7 @@ module Sysdig
       end
 
       def get_view(name)
-
+        #TODO: Implement this
       end
 
       def get_dashboards
@@ -82,43 +82,43 @@ module Sysdig
       end
 
       def find_dashboard_by(name)
-
+        #TODO: Implement this
       end
 
       def create_dashboard(name)
-
+        #TODO: Implement this
       end
 
       def add_dashboard_panel
-
+        #TODO: Implement this
       end
 
       def remove_dashboard_panel(dashboard, panel_name)
-
+        #TODO: Implement this
       end
 
       def create_dashboard_from_template(newdashname, template, scope)
-
+        #TODO: Implement this
       end
 
       def create_dashboard_from_view(newdashname, viewname, filter)
-
+        #TODO: Implement this
       end
 
       def create_dashboard_from_dashboard(newdashname, templatename, filter)
-
+        #TODO: Implement this
       end
 
       def create_dashboard_from_file(newdashname, filename, scope)
-
+        #TODO: Implement this
       end
 
       def delete_dashboard(dashboard)
-
+        #TODO: Implement this
       end
 
       def post_event
-
+        #TODO: Implement this
       end
 
       def get_events(name, from_ts, to_ts, tags)
@@ -138,7 +138,7 @@ module Sysdig
       end
 
       def get_data
-
+        #TODO: Implement this
       end
 
       def get_metrics
@@ -150,23 +150,25 @@ module Sysdig
       end
 
       def poll_sysdig_capture
-
+        #TODO: Implement this
       end
 
       def create_sysdig_capture
-
+        #TODO: Implement this
       end
 
       private
 
       def conn
         @conn ||= Faraday.new('https://app.sysdigcloud.com') do |conn|
-          conn.headers['Authorization'] = "Bearer #{@api_token}"
-          conn.headers['Content-Type'] = 'application/json'
-          conn.headers['User-Agent'] = nil
+          conn.headers = {
+            'Authorization' => "Bearer #{@api_token}",
+            'Content-Type' => 'application/json',
+          }
           conn.response :json, :content_type => /\bjson$/
           conn.response :mashify
           conn.adapter Faraday.default_adapter
+          conn.use Faraday::Response::RaiseError
         end
       end
     end
