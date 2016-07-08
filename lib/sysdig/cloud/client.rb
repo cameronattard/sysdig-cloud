@@ -1,5 +1,6 @@
 require 'faraday'
 require 'faraday_middleware'
+require 'json'
 
 module Sysdig
   module Cloud
@@ -10,15 +11,15 @@ module Sysdig
       end
 
       def get_user_info
-        conn.get('api/user/me')
+        conn.get('/api/user/me')
       end
 
       def get_connected_agents
-        conn.get('api/agents/connected')
+        conn.get('/api/agents/connected')
       end
 
       def get_alerts
-        conn.get('api/agents/alerts')
+        conn.get('/api/agents/alerts')
       end
 
       def get_notifications(from_ts, to_ts, state, resolved)
@@ -30,7 +31,7 @@ module Sysdig
         }
 
         # TODO: add params (request body?)
-        conn.get('api/notifications')
+        conn.get('/api/notifications')
       end
 
       def update_notofication_resolution
@@ -46,7 +47,7 @@ module Sysdig
       end
 
       def get_notification_settings(settings)
-        conn.get('api/settings/notifications')
+        conn.get('/api/settings/notifications')
       end
 
       def set_notification_settings(settings)
@@ -58,11 +59,11 @@ module Sysdig
       end
 
       def get_explore_grouping_hierarchy
-        conn.get('api/groupConfigurations')
+        conn.get('/api/groupConfigurations')
       end
 
       def get_data_retention_info
-        conn.get('api/history/timelines')
+        conn.get('/api/history/timelines')
       end
 
       def get_topology_map
@@ -137,16 +138,33 @@ module Sysdig
         conn.delete("/api/events/#{event['id']}")
       end
 
-      def get_data
-        #TODO: Implement this
+      def get_data(metrics, start_ts, end_ts=0, sampling_s=0, filter='', datasource_type='host')
+        req_body = {
+          metrics: metrics,
+          dataSourceType: datasource_type
+        }
+
+        if start_ts < 0
+          req_body[:last] = -start_ts
+        elsif start_ts == 0
+          return false
+        else
+          req_body[:start] = start_ts
+          req_body[:end] = end_ts
+        end
+
+        req_body[:filter] = filter if filter != ''
+        req_body[:sampling] = sampling_s if sampling_s != 0
+
+        conn.post('/api/data/', req_body)
       end
 
       def get_metrics
-        conn.get('api/data/metrics')
+        conn.get('/api/data/metrics')
       end
 
       def get_sysdig_captures
-        conn.get('api/sysdig')
+        conn.get('/api/sysdig')
       end
 
       def poll_sysdig_capture
@@ -165,6 +183,7 @@ module Sysdig
             'Authorization' => "Bearer #{@api_token}",
             'Content-Type' => 'application/json',
           }
+          conn.request :json
           conn.response :json, :content_type => /\bjson$/
           conn.response :mashify
           conn.adapter Faraday.default_adapter
