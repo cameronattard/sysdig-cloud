@@ -81,7 +81,16 @@ module Sysdig
       end
 
       def get_view(name)
-        #TODO: Implement this
+        #TODO: Test this
+        views_list_response = JSON.parse(get_views_list.body)
+        return false if views_list.empty?
+
+        views_list = views_list_response['drillDownDashboardDescriptors']
+
+        view_id = views_list.find { |view| view['name'] == name }.try(:id)
+        return false if view_id.nil?
+
+        conn.get("/data/drilldownDashboards/#{view_id}".json)
       end
 
       def get_dashboards
