@@ -192,8 +192,10 @@ module Sysdig
         conn.get('/api/sysdig')
       end
 
-      def poll_sysdig_capture
-        #TODO: Implement this
+      def poll_sysdig_capture(capture)
+        #TODO: Test this
+        return false unless capture.key?(:id)
+        conn.get("/api/sysdig/#{capture[:id]}")
       end
 
       def create_sysdig_capture
