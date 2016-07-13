@@ -198,8 +198,25 @@ module Sysdig
         conn.get("/api/sysdig/#{capture[:id]}")
       end
 
-      def create_sysdig_capture
-        #TODO: Implement this
+      def create_sysdig_capture(hostname, capture_name, duration, capture_filter = '', folder = '/')
+        #TODO: Test this
+        connected_agents = get_connected_agents.body
+        return false if connected_agents.empty?
+
+        capture_agent = connected_agents['agents'].find do |agent|
+          agent['hostName'] == hostname
+        end
+
+        data = {
+          agent: capture_agent,
+          name: capture_name,
+          duration: duration,
+          folder: folder,
+          filters: capture_filter,
+          bucketName: ''
+        }
+
+        conn.post('/api/sysdig', data)
       end
 
       private
