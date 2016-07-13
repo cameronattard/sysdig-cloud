@@ -22,16 +22,14 @@ module Sysdig
         conn.get('/api/agents/alerts')
       end
 
-      def get_notifications(from_ts, to_ts, state, resolved)
-        params = {
-          from: from_ts * 100000,
-          to: to_ts * 100000,
-          state: state,
-          resolved: resolved
-        }
+      def get_notifications(from_ts, to_ts, state=nil, resolved=nil)
+        params = {}
+        params[:from] = from_ts * 100000 unless from_ts.nil?
+        params[:to] = to_ts * 100000 unless to_ts.nil?
+        params[:state] = state unless state.nil?
+        params[:resolved] = resolved unless resolved.nil?
 
-        # TODO: add params (request body?)
-        conn.get('/api/notifications')
+        conn.get('/api/notifications', params)
       end
 
       def update_notofication_resolution
