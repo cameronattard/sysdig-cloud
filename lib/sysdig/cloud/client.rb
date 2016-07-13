@@ -46,7 +46,9 @@ module Sysdig
       end
 
       def delete_alert(alert)
-        #TODO: Implement this
+        #TODO: Test this
+        return false unless alert.key?(:id)
+        conn.delete("/api/alerts/#{alert[:id]}")
       end
 
       def get_notification_settings(settings)
