@@ -32,8 +32,13 @@ module Sysdig
         conn.get('/api/notifications', params)
       end
 
-      def update_notofication_resolution
-        #TODO: Implement this
+      def update_notofication_resolution(notification, resolved)
+        #TODO: Test this
+        return false unless notification.key?(:id)
+        notification[:resolved] = resolved
+        data = { notification: notification }
+
+        conn.put("/api/notifications/#{notification[:id]}", data)
       end
 
       def create_alert
