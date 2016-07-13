@@ -56,7 +56,8 @@ module Sysdig
       end
 
       def set_notification_settings(settings)
-        #TODO: Implement this
+        #TODO: Test this
+        conn.put('/api/settings/notifications', settings)
       end
 
       def add_email_notification_recipient(email)
