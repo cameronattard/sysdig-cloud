@@ -22,7 +22,7 @@ module Sysdig
         conn.get('/api/agents/alerts')
       end
 
-      def get_notifications(from_ts, to_ts, state=nil, resolved=nil)
+      def get_notifications(from_ts, to_ts, state = nil, resolved = nil)
         params = {}
         params[:from] = from_ts * 100000 unless from_ts.nil?
         params[:to] = to_ts * 100000 unless to_ts.nil?
@@ -97,12 +97,23 @@ module Sysdig
         conn.get('/ui/dashboards')
       end
 
-      def find_dashboard_by(name)
+      def find_dashboard_by(name = nil)
         #TODO: Implement this
       end
 
       def create_dashboard(name)
-        #TODO: Implement this
+        #TODO: Test this
+        dashboard_config = {
+          name: name,
+          schema: 1,
+          items: []
+        }
+
+        data = {
+          dashboard: dashboard_config
+        }
+
+        conn.post('/ui/dashboards', data)
       end
 
       def add_dashboard_panel
@@ -138,19 +149,18 @@ module Sysdig
       end
 
       def get_events(name, from_ts, to_ts, tags)
-        params = {
-          name: name,
-          from: from_ts,
-          to: to_ts,
-          tags: tags
-        }
+        # TODO: Test this
+        params = {}
+        params[:name] = name unless name.nil?
+        params[:from] = from_ts unless from_ts.nil?
+        params[:to] = to_ts unless to_ts.nil?
+        params[:tags] = tags unless tags.nil?
 
-        # TODO: pass params
-        conn.get('/api/events')
+        conn.get('/api/events', params)
       end
 
       def delete_event(event)
-        conn.delete("/api/events/#{event['id']}")
+        conn.delete("/api/events/#{event[:id]}")
       end
 
       def get_data(metrics, start_ts, end_ts=0, sampling_s=0, filter='', datasource_type='host')
