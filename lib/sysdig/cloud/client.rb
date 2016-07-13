@@ -11,15 +11,15 @@ module Sysdig
       end
 
       def get_user_info
-        conn.get('/api/user/me')
+        conn.get('/api/user/me').body
       end
 
       def get_connected_agents
-        conn.get('/api/agents/connected')
+        conn.get('/api/agents/connected').body
       end
 
       def get_alerts
-        conn.get('/api/agents/alerts')
+        conn.get('/api/agents/alerts').body
       end
 
       def get_notifications(from_ts, to_ts, state = nil, resolved = nil)
@@ -29,7 +29,7 @@ module Sysdig
         params[:state] = state unless state.nil?
         params[:resolved] = resolved unless resolved.nil?
 
-        conn.get('/api/notifications', params)
+        conn.get('/api/notifications', params).body
       end
 
       def update_notofication_resolution(notification, resolved)
@@ -38,7 +38,7 @@ module Sysdig
         notification[:resolved] = resolved
         data = { notification: notification }
 
-        conn.put("/api/notifications/#{notification[:id]}", data)
+        conn.put("/api/notifications/#{notification[:id]}", data).body
       end
 
       def create_alert
@@ -48,16 +48,16 @@ module Sysdig
       def delete_alert(alert)
         #TODO: Test this
         return false unless alert.key?(:id)
-        conn.delete("/api/alerts/#{alert[:id]}")
+        conn.delete("/api/alerts/#{alert[:id]}").body
       end
 
       def get_notification_settings(settings)
-        conn.get('/api/settings/notifications')
+        conn.get('/api/settings/notifications').body
       end
 
       def set_notification_settings(settings)
         #TODO: Test this
-        conn.put('/api/settings/notifications', settings)
+        conn.put('/api/settings/notifications', settings).body
       end
 
       def add_email_notification_recipient(email)
@@ -65,11 +65,11 @@ module Sysdig
       end
 
       def get_explore_grouping_hierarchy
-        conn.get('/api/groupConfigurations')
+        conn.get('/api/groupConfigurations').body
       end
 
       def get_data_retention_info
-        conn.get('/api/history/timelines')
+        conn.get('/api/history/timelines').body
       end
 
       def get_topology_map
@@ -77,7 +77,7 @@ module Sysdig
       end
 
       def get_views_list
-        conn.get('/data/drilldownDashboardDescriptors.json')
+        conn.get('/data/drilldownDashboardDescriptors.json').body
       end
 
       def get_view(name)
@@ -90,11 +90,11 @@ module Sysdig
         view_id = views_list.find { |view| view['name'] == name }.try(:id)
         return false if view_id.nil?
 
-        conn.get("/data/drilldownDashboards/#{view_id}".json)
+        conn.get("/data/drilldownDashboards/#{view_id}".json).body
       end
 
       def get_dashboards
-        conn.get('/ui/dashboards')
+        conn.get('/ui/dashboards').body
       end
 
       def find_dashboard_by(name = nil)
@@ -113,7 +113,7 @@ module Sysdig
           dashboard: dashboard_config
         }
 
-        conn.post('/ui/dashboards', data)
+        conn.post('/ui/dashboards', data).body
       end
 
       def add_dashboard_panel
@@ -156,11 +156,11 @@ module Sysdig
         params[:to] = to_ts unless to_ts.nil?
         params[:tags] = tags unless tags.nil?
 
-        conn.get('/api/events', params)
+        conn.get('/api/events', params).body
       end
 
       def delete_event(event)
-        conn.delete("/api/events/#{event[:id]}")
+        conn.delete("/api/events/#{event[:id]}").body
       end
 
       def get_data(metrics, start_ts, end_ts=0, sampling_s=0, filter='', datasource_type='host')
@@ -181,26 +181,26 @@ module Sysdig
         req_body[:filter] = filter if filter != ''
         req_body[:sampling] = sampling_s if sampling_s != 0
 
-        conn.post('/api/data/', req_body)
+        conn.post('/api/data/', req_body).body
       end
 
       def get_metrics
-        conn.get('/api/data/metrics')
+        conn.get('/api/data/metrics').body
       end
 
       def get_sysdig_captures
-        conn.get('/api/sysdig')
+        conn.get('/api/sysdig').body
       end
 
       def poll_sysdig_capture(capture)
         #TODO: Test this
         return false unless capture.key?(:id)
-        conn.get("/api/sysdig/#{capture[:id]}")
+        conn.get("/api/sysdig/#{capture[:id]}").body
       end
 
       def create_sysdig_capture(hostname, capture_name, duration, capture_filter = '', folder = '/')
         #TODO: Test this
-        connected_agents = get_connected_agents.body
+        connected_agents = get_connected_agents
         return false if connected_agents.empty?
 
         capture_agent = connected_agents['agents'].find do |agent|
@@ -216,7 +216,7 @@ module Sysdig
           bucketName: ''
         }
 
-        conn.post('/api/sysdig', data)
+        conn.post('/api/sysdig', data).body
       end
 
       private
