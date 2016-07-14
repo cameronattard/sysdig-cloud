@@ -163,7 +163,7 @@ module Sysdig
         conn.delete("/api/events/#{event[:id]}").body
       end
 
-      def get_data(metrics, start_ts, end_ts=0, sampling_s=0, filter='', datasource_type='host')
+      def get_data(metrics, start_ts, end_ts = 0, sampling_s = 0, filter = '', datasource_type = 'host')
         req_body = {
           metrics: metrics,
           dataSourceType: datasource_type
