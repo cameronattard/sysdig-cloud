@@ -1,6 +1,6 @@
 # Sysdig::Cloud
 
-A Ruby client for the Sysdig Cloud REST API.
+A Ruby client for the Sysdig Cloud REST API. This is essentially a direct Ruby conversion of [Sysdig Cloud's official Python client](https://github.com/draios/python-sdc-client).
 
 ## Installation
 
@@ -20,7 +20,13 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+```ruby
+require 'sysdig/cloud'
+
+sysdig = Sysdig::Cloud::Client.new(api_token: your_api_token)
+
+sysdig.get_metrics
+```
 
 ## Development
 
@@ -30,4 +36,4 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/sysdig-cloud.
+Bug reports and pull requests are welcome on GitHub at https://github.com/cameronattard/sysdig-cloud.
