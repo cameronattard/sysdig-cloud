@@ -141,11 +141,24 @@ module Sysdig
       end
 
       def delete_dashboard(dashboard)
-        #TODO: Implement this
+        #TODO: Test this
+        return false unless dashboard.key?(:id)
+        conn.delete("/ui/dashboards/#{dashboard[:id]}").body
       end
 
-      def post_event
-        #TODO: Implement this
+      def post_event(name, description = nil, severity = nil, event_filter = nil, tags = nil)
+        #TODO: Test this
+        event_data = {
+          event: {
+            name: name
+          }
+        }
+        event_data[:event][:description] = description unless description.nil?
+        event_data[:event][:severity] = severity unless severity.nil?
+        event_data[:event][:filter] = event_filter unless event_filter.nil?
+        event_data[:event][:tags] = tags unless tags.nil?
+
+        conn.post('/api/events', event_data.to_json).body
       end
 
       def get_events(name, from_ts, to_ts, tags)
